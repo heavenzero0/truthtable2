@@ -1,6 +1,7 @@
 package com.teamjuno.truthtable2.controllers;
 
 
+import com.teamjuno.truthtable2.Utils.StringSplitter;
 import com.teamjuno.truthtable2.model.Expression;
 import com.teamjuno.truthtable2.services.PostFixCalculator;
 import com.teamjuno.truthtable2.services.ToPostFix;
@@ -23,15 +24,16 @@ public class MainController {
     public void show() {
         String ex = "p^(pvq)v(p^q)";
         String ex2 = "(pvq)^((p^q)^(pvq))";
-        String ex3 = "pv~q";
+        String ex3 = "(pvq)^(pvq)";
+        String ex4 = "(pvq)^((~p)^(~q))";
 
-        Queue<String> val = toPostFix.tokens(ex3);
+        Queue<String> val = toPostFix.tokens( ex);
         System.out.println();
         val.forEach(System.out::print);
         System.out.println();
 
 
-        System.out.println();
+        System.out.println("Problem: " +ex);
         for(Expression expression : postFixCalculator.calculate(val)) {
             System.out.print(expression.getVariable() + " ");
             for(String exp: expression.getValue()) {
@@ -40,6 +42,9 @@ public class MainController {
             System.out.println();
         }
         System.out.println();
+
+        System.out.println("Result: " + StringSplitter.splitter("p"));
+
     }
 
 
