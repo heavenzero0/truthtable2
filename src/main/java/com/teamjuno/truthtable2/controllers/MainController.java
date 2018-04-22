@@ -11,6 +11,7 @@ import java.util.Queue;
 @Component
 public class MainController {
 
+
     private final ToPostFix toPostFix;
     private final PostFixCalculator postFixCalculator;
 
@@ -22,10 +23,11 @@ public class MainController {
     public void show() {
         String ex = "p^(pvq)v(p^q)";
         String ex2 = "(pvq)^((p^q)^(pvq))";
+        String ex3 = "pv~q";
 
-        Queue<String> val = toPostFix.tokens(ex2);
+        Queue<String> val = toPostFix.tokens(ex3);
         System.out.println();
-        val.stream().forEach(System.out::print);
+        val.forEach(System.out::print);
         System.out.println();
 
 

@@ -16,30 +16,43 @@ public class PostFixCalculatorImpl implements PostFixCalculator {
     public ArrayList<Expression> calculate(Queue<String> tokens) {
         Stack<String> variable = new Stack<>();
         ArrayList<Expression> outputs = new ArrayList<>();
-        ArrayList<Expression> finalOutputs = new ArrayList<>();
+       // ArrayList<Expression> finalOutputs = new ArrayList<>();
         setValue();
         outputs.add(p);
         outputs.add(q);
-        finalOutputs.add(p);
-        outputs.add(q);
+
 
         for (String token : tokens) {
-            if (token.equals("v")) {
-                String secondValue = variable.peek();
-                variable.pop();
-                String firstValue = variable.peek();
-                variable.pop();
-                Expression expression = or(secondValue, firstValue, outputs);
-                variable.push(expression.getVariable());
-            } else if (token.equals("^")) {
-                String secondValue = variable.peek();
-                variable.pop();
-                String firstValue = variable.peek();
-                variable.pop();
-                Expression expression = and(secondValue, firstValue, outputs);
-                variable.push(expression.getVariable());
-            } else {
-                variable.push(token);
+            switch (token) {
+                case "v": {
+                    String secondValue = variable.peek();
+                    variable.pop();
+                    String firstValue = variable.peek();
+                    variable.pop();
+                    Expression expression = or(secondValue, firstValue, outputs);
+                    variable.push(expression.getVariable());
+                    break;
+                }
+                case "^": {
+                    String secondValue = variable.peek();
+                    variable.pop();
+                    String firstValue = variable.peek();
+                    variable.pop();
+                    Expression expression = and(secondValue, firstValue, outputs);
+                    variable.push(expression.getVariable());
+                    break;
+                }
+                case "~": {
+                    String value = variable.peek();
+                    variable.pop();
+                    Expression expression = not(value, outputs);
+                    variable.push(expression.getVariable());
+
+                    break;
+                }
+                default:
+                    variable.push(token);
+                    break;
             }
         }
         return outputs;
@@ -108,6 +121,27 @@ public class PostFixCalculatorImpl implements PostFixCalculator {
         }
         outputs.add(newExpression);
 
+        return newExpression;
+    }
+
+    private Expression not(String value, ArrayList<Expression> outputs) {
+
+        Expression expression = new Expression();
+        Expression newExpression = new Expression();
+        newExpression.setVariable("~" + value);
+        for (Expression exp : outputs) {
+            if (exp.getVariable().equals(value))
+                expression = exp;
+        }
+
+        for (String v : expression.getValue()) {
+            if (v.equals("T")) {
+                newExpression.setValue("F");
+            } else {
+                newExpression.setValue("T");
+            }
+        }
+        outputs.add(newExpression);
         return newExpression;
     }
 
